@@ -1,0 +1,892 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>如果城市有記憶｜If the City Had Memory</title>
+
+  <style>
+    /* ===== 基本設定 ===== */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #121619;
+      --card: #1d252d;
+      --text: #e5edf4;
+      --muted: #a8b8c5;
+      --english: #cfe3f2;
+      --water: #00d2ff;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(
+        circle at 50% 0%,
+        #1a2634 0%,
+        #121619 70%
+      );
+      color: var(--text);
+
+      /* 中文：標楷體 */
+      font-family:
+        "DFKai-SB",
+        "標楷體",
+        "BiauKai",
+        serif;
+    }
+
+    /* 英文：Times New Roman */
+    .english,
+    .header-en,
+    .question-en,
+    .option-en,
+    [lang="en"] {
+      font-family:
+        "Times New Roman",
+        Times,
+        serif;
+    }
+
+    /* ===== 主要卡片 ===== */
+
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px;
+      padding: 28px 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,.5);
+    }
+
+    .header {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .header-en {
+      display: block;
+      margin-top: 5px;
+      font-size: 13px;
+      color: var(--english);
+    }
+
+    h1 {
+      font-size: 23px;
+      line-height: 1.6;
+      margin: 12px 0 6px;
+    }
+
+    h2 {
+      font-size: 20px;
+      line-height: 1.6;
+      margin: 12px 0 6px;
+    }
+
+    p {
+      line-height: 1.8;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .english {
+      color: var(--english);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .water {
+      color: var(--water);
+    }
+
+    /* ===== 首頁圖示 ===== */
+
+    .symbol {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(0,210,255,.12);
+      color: var(--water);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto 20px;
+      font-size: 35px;
+    }
+
+    /* ===== 文字說明 ===== */
+
+    .description {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(0,0,0,.25);
+      margin: 20px 0;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .description p {
+      margin-bottom: 0;
+    }
+
+    /* ===== 按鈕 ===== */
+
+    button {
+      cursor: pointer;
+      transition: .2s;
+      font-family:
+        "DFKai-SB",
+        "標楷體",
+        "BiauKai",
+        serif;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--water);
+      outline-offset: 3px;
+    }
+
+    .start {
+      width: 100%;
+      border: none;
+      border-radius: 50px;
+      background: var(--text);
+      color: var(--bg);
+      padding: 14px;
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .start:hover {
+      background: white;
+      transform: translateY(-2px);
+    }
+
+    .start small {
+      display: block;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    /* ===== 測驗進度 ===== */
+
+    .progress {
+      height: 6px;
+      background: rgba(255,255,255,.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        #00c6ff,
+        #0072ff
+      );
+      transition: width .3s;
+    }
+
+    .number {
+      display: inline-block;
+      padding: 7px 12px;
+      background: rgba(0,210,255,.1);
+      border-radius: 30px;
+      color: var(--water);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .question-en {
+      color: var(--english);
+      margin: 5px 0 24px;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    /* ===== 題目選項 ===== */
+
+    .option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .option:hover {
+      background: rgba(0,210,255,.12);
+      border-color: var(--water);
+      transform: translateY(-2px);
+    }
+
+    .option strong {
+      color: var(--water);
+      margin-right: 6px;
+      font-family: "Times New Roman", serif;
+    }
+
+    .option-en {
+      display: block;
+      color: #c3d4e2;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-top: 7px;
+    }
+
+    /* ===== 測驗結果 ===== */
+
+    .result-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 35px;
+    }
+
+    .result-title {
+      font-size: 23px;
+    }
+
+    /* ===== 書籤領取區 ===== */
+
+    .bookmark {
+      border-top: 1px dashed rgba(255,255,255,.2);
+      padding-top: 22px;
+      margin-top: 25px;
+    }
+
+    .bookmark-label {
+      display: inline-block;
+      border-radius: 30px;
+      padding: 12px 18px;
+      color: var(--bg);
+      font-size: 15px;
+      font-weight: bold;
+      margin-top: 12px;
+      line-height: 1.7;
+    }
+
+    .restart {
+      margin-top: 25px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--muted);
+      border-radius: 30px;
+      padding: 12px 22px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .restart:hover {
+      color: white;
+      border-color: white;
+    }
+
+    /* ===== 動畫 ===== */
+
+    .fade {
+      animation: fadeIn .35s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== 手機版 ===== */
+
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 24px 16px;
+      }
+
+      h1 {
+        font-size: 21px;
+      }
+
+      h2 {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="card">
+
+    <div class="header">
+      未來城市價值測驗
+
+      <span class="header-en" lang="en">
+        Future City Values Quiz
+      </span>
+    </div>
+
+    <div id="app"></div>
+
+  </main>
+
+  <script>
+
+    /* ===== 測驗題目 ===== */
+
+    const questions = [
+
+      {
+        zh: "如果你生活在未來的塭仔圳，你最希望每天看到什麼？",
+
+        en: "If you lived in the future Wenzaijun, what would you hope to see every day?",
+
+        options: [
+
+          {
+            type: "A",
+            zh: "綠意盎然的親水廊道與生態公園，感受與水共生的環境。",
+            en: "Lush green riverside corridors and eco-parks to experience living with water."
+          },
+
+          {
+            type: "B",
+            zh: "保留昔日農耕水圳與老工廠意象的街角藝術，看見地景記憶。",
+            en: "Street art preserving agricultural waterways and old factory memories."
+          },
+
+          {
+            type: "C",
+            zh: "熱鬧有溫度的鄰里廣場與綠色輕軌，享受便利有溫度的人情生活。",
+            en: "Vibrant community plazas and light rail for a warm neighborhood life."
+          }
+
+        ]
+      },
+
+      {
+        zh: "當你帶朋友認識塭仔圳，你最想介紹什麼？",
+
+        en: "When introducing Wenzaijun to your friends, what would you most like to share?",
+
+        options: [
+
+          {
+            type: "A",
+            zh: "地下滯洪池與公七親水公園，展示這座城市與水共生的防災智慧。",
+            en: "Underground detention basins and Gong-Qi Park showing how the city lives with water and manages floods."
+          },
+
+          {
+            type: "B",
+            zh: "當地保存百年的古水圳歷史與轉型後的職人技術與工藝故事。",
+            en: "The century-old waterways and stories of local craftsmanship and industrial transformation."
+          },
+
+          {
+            type: "C",
+            zh: "結合大學城、社會住宅與日常綠廊的宜居生活圈。",
+            en: "A livable neighborhood with a university town, social housing, and green corridors."
+          }
+
+        ]
+      },
+
+      {
+        zh: "對於十年後的塭仔圳，你最期待什麼？",
+
+        en: "What do you hope Wenzaijun will become in ten years?",
+
+        options: [
+
+          {
+            type: "A",
+            zh: "成為與水共生的綠色城市",
+            en: "A green city that lives in harmony with water."
+          },
+
+          {
+            type: "B",
+            zh: "成為延續地方文化的城市",
+            en: "A city that preserves and carries on local culture."
+          },
+
+          {
+            type: "C",
+            zh: "成為充滿人情味的宜居城市",
+            en: "A warm and welcoming city where people enjoy living."
+          }
+
+        ]
+      }
+
+    ];
+
+
+    /* ===== 測驗結果 ===== */
+
+    const results = {
+
+      A: {
+
+        title: "守護水脈的生態行者",
+
+        titleEn: "The Eco-Hydrology Guardian",
+
+        description: "你非常關注城市與自然的和諧共生。對你而言，未來的塭仔圳不只是蓋高樓，更重要的是讓腳下的古水圳與滯洪池發揮作用，打造一座能與水呼吸的永續生態城市。",
+
+        descriptionEn: "You care deeply about the harmony between urban life and nature. For you, future Wenzaijun is not just about high-rises, but making ancient waterways and detention basins work together to build a sustainable eco-city living with water.",
+
+        card: "藍卡：水文共生書籤",
+
+        cardEn: "Blue Card: Living with Water Bookmark",
+
+        color: "#00d2ff",
+
+        icon: "🌊"
+
+      },
+
+      B: {
+
+        title: "留存工藝的記憶建築師",
+
+        titleEn: "The Cultural Memory Architect",
+
+        description: "你深深珍視這片土地的歷史底蘊。你希望昔日新莊米倉的農耕水圳與傳統工廠的職人精神，能化為未來都市景觀的一部分，讓世代交替時記憶不被抹去。",
+
+        descriptionEn: "You treasure the history of this land. You hope the agricultural waterways of Xinzhuang's rice-growing past and the craftsmanship of traditional factories can become part of the future cityscape, preserving local memories across generations.",
+
+        card: "橘卡：記憶延續書籤",
+
+        cardEn: "Orange Card: Keeping Memories Alive Bookmark",
+
+        color: "#ff9966",
+
+        icon: "🏛️"
+
+      },
+
+      C: {
+
+        title: "凝聚人情的鄰里創生者",
+
+        titleEn: "The Everyday Community Builder",
+
+        description: "你最在乎的是「人在城市裡的真實生活感」。便利的五泰輕軌、舒適的公園綠地與有溫度的鄰里社群，是你心中理想未來城市最核心的價值。",
+
+        descriptionEn: "You care most about how people experience everyday life in the city. Convenient Wutai Light Rail, comfortable green parks, and friendly neighborhood connections are the most important parts of your ideal future city.",
+
+        card: "綠卡：生活溫度書籤",
+
+        cardEn: "Green Card: Everyday Warmth Bookmark",
+
+        color: "#38ef7d",
+
+        icon: "🏡"
+
+      }
+
+    };
+
+
+    /* ===== 變數 ===== */
+
+    let currentQuestion = 0;
+
+    let answers = [];
+
+    const app = document.getElementById("app");
+
+
+    /* ===== 首頁 ===== */
+
+    function showIntro() {
+
+      app.innerHTML = `
+
+        <section class="center fade">
+
+          <div class="symbol">
+            🏙️
+          </div>
+
+          <h1>
+            如果城市有記憶：未來城市價值測驗
+          </h1>
+
+          <p class="water" lang="en">
+            <strong>
+              If the City Had Memory:<br>
+              A Future City Values Quiz
+            </strong>
+          </p>
+
+          <div class="description">
+
+            透過三個生活情境，發現你最重視的未來城市價值。
+
+            <p class="english" lang="en">
+              Explore three everyday situations and discover
+              what you value most in a future city.
+            </p>
+
+          </div>
+
+          <button
+            class="start"
+            onclick="startQuiz()"
+          >
+
+            開始測驗 →
+
+            <small lang="en">
+              Start the Quiz →
+            </small>
+
+          </button>
+
+        </section>
+
+      `;
+
+    }
+
+
+    /* ===== 開始測驗 ===== */
+
+    function startQuiz() {
+
+      currentQuestion = 0;
+
+      answers = [];
+
+      showQuestion();
+
+    }
+
+
+    /* ===== 顯示題目 ===== */
+
+    function showQuestion() {
+
+      const q = questions[currentQuestion];
+
+      const progress =
+        (currentQuestion + 1) / questions.length * 100;
+
+      app.innerHTML = `
+
+        <section class="fade">
+
+          <div
+            class="progress"
+            role="progressbar"
+            aria-label="測驗進度 Quiz Progress"
+            aria-valuemin="1"
+            aria-valuemax="${questions.length}"
+            aria-valuenow="${currentQuestion + 1}"
+          >
+
+            <div
+              class="progress-fill"
+              style="width:${progress}%"
+            ></div>
+
+          </div>
+
+          <span class="number">
+
+            第 ${currentQuestion + 1} / ${questions.length} 題
+
+            <span lang="en">
+              | Question ${currentQuestion + 1} of ${questions.length}
+            </span>
+
+          </span>
+
+          <h2>
+            ${q.zh}
+          </h2>
+
+          <p class="question-en" lang="en">
+            ${q.en}
+          </p>
+
+          <div>
+
+            ${q.options.map(option => `
+
+              <button
+                class="option"
+                onclick="selectAnswer('${option.type}')"
+              >
+
+                <strong>
+                  ${option.type}.
+                </strong>
+
+                ${option.zh}
+
+                <span class="option-en" lang="en">
+                  ${option.en}
+                </span>
+
+              </button>
+
+            `).join("")}
+
+          </div>
+
+        </section>
+
+      `;
+
+    }
+
+
+    /* ===== 選擇答案 ===== */
+
+    function selectAnswer(type) {
+
+      answers.push(type);
+
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+
+        showQuestion();
+
+      } else {
+
+        showResult();
+
+      }
+
+    }
+
+
+    /* ===== 計算結果 ===== */
+
+    function calculateResult() {
+
+      const scores = {
+        A: 0,
+        B: 0,
+        C: 0
+      };
+
+      answers.forEach(answer => {
+
+        scores[answer]++;
+
+      });
+
+      let highest = "A";
+
+      if (scores.B > scores[highest]) {
+
+        highest = "B";
+
+      }
+
+      if (scores.C > scores[highest]) {
+
+        highest = "C";
+
+      }
+
+      return highest;
+
+    }
+
+
+    /* ===== 顯示測驗結果 ===== */
+
+    function showResult() {
+
+      const type = calculateResult();
+
+      const result = results[type];
+
+      app.innerHTML = `
+
+        <section
+          class="center fade"
+          aria-live="polite"
+        >
+
+          <div
+            class="result-icon"
+            style="
+              background:${result.color}22;
+              color:${result.color};
+            "
+          >
+
+            ${result.icon}
+
+          </div>
+
+          <p class="muted">
+
+            你的未來市民類型是
+
+            <br>
+
+            <span class="english" lang="en">
+              Your Future Citizen Type Is
+            </span>
+
+          </p>
+
+          <h2 class="result-title">
+            ${result.title}
+          </h2>
+
+          <p
+            style="color:${result.color}"
+            lang="en"
+          >
+
+            <strong>
+              ${result.titleEn}
+            </strong>
+
+          </p>
+
+          <div
+            class="description"
+            style="text-align:left"
+          >
+
+            ${result.description}
+
+          </div>
+
+          <div
+            class="description english"
+            style="text-align:left"
+            lang="en"
+          >
+
+            ${result.descriptionEn}
+
+          </div>
+
+          <div class="bookmark">
+
+            <p>
+
+              📍 請至書籤展示區領取
+
+              <br>
+
+              <span class="english" lang="en">
+                Please Collect Your Bookmark
+                at the Bookmark Display
+              </span>
+
+            </p>
+
+            <div
+              class="bookmark-label"
+              style="background:${result.color}"
+            >
+
+              ${result.card}
+
+              <br>
+
+              <span lang="en">
+                ${result.cardEn}
+              </span>
+
+            </div>
+
+            <p
+              class="muted"
+              style="font-size:13px"
+            >
+
+              出示此畫面，即可於書籤展示區領取屬於你的城市記憶！
+
+            </p>
+
+            <p
+              class="english"
+              style="font-size:13px"
+              lang="en"
+            >
+
+              Show this screen at the Bookmark Display
+              to collect your own piece of the city's memory!
+
+            </p>
+
+          </div>
+
+          <button
+            class="restart"
+            onclick="startQuiz()"
+          >
+
+            ↻ 重新測驗
+
+            <br>
+
+            <span lang="en">
+              Restart the Quiz
+            </span>
+
+          </button>
+
+        </section>
+
+      `;
+
+    }
+
+
+    /* ===== 載入首頁 ===== */
+
+    showIntro();
+
+  </script>
+
+</body>
+</html>
